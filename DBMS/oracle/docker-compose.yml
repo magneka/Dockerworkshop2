@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+
+  oracle:
+    image: gvenzl/oracle-xe:21-slim       
+    container_name: oraclexe 
+    volumes:      
+      - 'oraclexe-volume:/opt/oracle/oradata'
+      - './initscripts:/container-entrypoint-initdb.d' 
+      - './startupscripts:/container-entrypoint-startdb.d'
+    ports:    
+      - 1521:1521
+    environment:      
+      # Create schema     
+      APP_USER: dbuser
+      APP_USER_PASSWORD: dbuser
+      
+      # For SYS user with role SYSDBA
+      ORACLE_PASSWORD : root 
+      ORACLE_DATABASE : eis 
+
+volumes:
+   # For persisting data between sessions 
+   oraclexe-volume:
+   #initscripts:

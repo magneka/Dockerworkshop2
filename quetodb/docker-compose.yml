@@ -1,0 +1,71 @@
+#version: '3.9'
+ 
+services:
+
+  mysql80:
+    image: mysql:8.0.30
+    container_name: 'mysql80'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment: 
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: mydb
+        MYSQL_USER: user
+        MYSQL_PASSWORD: user
+    ports:
+      - 3306:3306
+    volumes: 
+      - ./MySql/init:/docker-entrypoint-initdb.d
+      - 'mysql-database:/var/lib/mysql'
+
+  activemq01:
+    image: symptoma/activemq:latest
+    container_name: 'activemq01'
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: admin 
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+
+    ports:
+      - 61616:61616
+      - 8161:8161
+    volumes:
+      - 'activemqdata:/data/activemq'
+      - './activemq/log:/var/log/activemq'
+
+  webjob:    
+    #image: "mcr.microsoft.com/dotnet/sdk:6.0"
+    image: "mcr.microsoft.com/dotnet/sdk:7.0"
+    container_name: webjobcore60
+
+    tty: true
+    
+    # Configuration options that are applied at build time.    
+    ports:
+      - 3000:5059
+      - 3001:7212
+    
+    # Set environment variables
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_RUNNING_IN_CONTAINER=compose
+    
+    # Mount host directories to container directories
+    volumes:
+      - ./cswebjob/source:/source
+      - '/source/MinApi/obj'
+      - '/source/MinApi/bin'
+
+  nodeapp01:
+    image: node:alpine3.15
+    container_name: nodeapp01
+    #tty: true
+    ports:
+      - 3029:80
+    volumes:
+      - ./nodeapp/source:/source
+      - '/source/node_modules'
+    command: ["sh", "/source/start.sh"]
+     
+volumes:
+  activemqdata:
+  mysql-database:

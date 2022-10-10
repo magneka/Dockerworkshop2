@@ -1,0 +1,5 @@
+oppskrift herfra
+https://onexlab-io.medium.com/docker-compose-mysql-database-seed-3bcbdfc51e8b
+
+Merk seeding kjøres kun første gangen.
+Dersom du endrer, må du slette docker volumet

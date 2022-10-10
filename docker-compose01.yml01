@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+
+  oracle:
+    image: container-registry.oracle.com/database/express:21.3.0-xe        
+    container_name: oraclexe 
+    volumes:      
+      - ./oraclexe-volume:/opt/oracle/oradata
+      - ./initscripts:/container-entrypoint-initdb.d      
+    ports:    
+      - 1521:1521
+    environment:      
+      # Create schema     
+      APP_USER: dbuser
+      APP_USER_PASSWORD: dbuser
+      
+      # For SYS user with role SYSDBA
+      ORACLE_PASSWORD : root  
+
+volumes:
+   # For persisting data between sessions 
+   oraclexe-volume:
+   #initscripts:

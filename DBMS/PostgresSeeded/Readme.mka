@@ -1,0 +1,4 @@
+Du kan enten koble deg til med beaver, eller du kan brukte terminal og kjøre kommandolinje
+
+psql -U postgres -d postgres -c 'SELECT * FROM city'
+psql -U postgres -d postgres -c 'SELECT * FROM users'
