@@ -48,6 +48,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=compose
+
+    depends_on:
+      - "mysql80"
+      - "activemq01"
     
     # Mount host directories to container directories
     volumes:
@@ -61,6 +65,9 @@ services:
     #tty: true
     ports:
       - 3029:80
+    depends_on:
+      - "mysql80"
+      - "activemq01"
     volumes:
       - ./nodeapp/source:/source
       - '/source/node_modules'
