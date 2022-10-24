@@ -1,8 +1,5 @@
 {
     "recommendations": [
-        "ms-dotnettools.csharp",
-        "kreativ-software.csharpextensions",
-        "kishoreithadi.dotnet-core-essentials",
-        "formulahendry.dotnet"
+        "ms-dotnettools.csharp"
     ]
 }

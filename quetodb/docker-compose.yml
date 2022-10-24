@@ -35,7 +35,7 @@ services:
   webjob:    
     #image: "mcr.microsoft.com/dotnet/sdk:6.0"
     image: "mcr.microsoft.com/dotnet/sdk:7.0"
-    container_name: webjobcore60
+    container_name: webjobcore70
 
     tty: true
     
@@ -62,16 +62,16 @@ services:
   nodeapp01:
     image: node:alpine3.15
     container_name: nodeapp01
-    #tty: true
+    tty: true
     ports:
-      - 3029:80
+      - 3085:85
     depends_on:
       - "mysql80"
       - "activemq01"
     volumes:
       - ./nodeapp/source:/source
       - '/source/node_modules'
-    command: ["sh", "/source/start.sh"]
+    #command: ["sh", "/source/start.sh"]
      
 volumes:
   activemqdata:

@@ -13,28 +13,30 @@ app.post('/api/contact', (req, res) => {
     
     console.log(req.body)
     
-    var name = req.body.Name;
-    var email = req.body.Email;
-    var message = req.body.Message;  
+    var username = req.body.Name;
+    var useremail = req.body.Email;
+    var messagetext = req.body.Message;  
 
     stompClient.connect(() => {
         console.log("ActiveMQ is connected")
     
         const notification = {      
-            Navn: name,
-            Epost: email,
-            Melding: message,
+            Username: username,
+            Useremail: useremail,
+            Messagetext: messagetext,
         }
     
-        stompClient.publish("Contact", JSON.stringify(notification))
+        stompClient.publish("Contact", JSON.stringify(notification))    
     
-        stompClient.disconnect()
     })
+ 
 
-    console.log(`Contacted by {name}, {email} regarding {Message}`);
+    //stompClient.disconnect()
+
+    console.log(`Contacted by ${username}, ${useremail} regarding ${messagetext}`);
     return res.redirect("/index.html");
 });
 
-app.listen(80,() => {
-console.log("Started on PORT 80");
+app.listen(85,() => {
+console.log("Started on PORT 85");
 })
