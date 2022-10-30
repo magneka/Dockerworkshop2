@@ -12,6 +12,9 @@
     <PackageReference Include="Apache.NMS.ActiveMQ" Version="2.0.0" />
     <PackageReference Include="dapper" Version="2.0.123" />
     <PackageReference Include="MySql.Data" Version="8.0.31" />
+    <PackageReference Include="serilog.aspnetcore" Version="6.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.1" />
   </ItemGroup>
 
 </Project>

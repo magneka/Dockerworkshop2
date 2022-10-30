@@ -10,3 +10,4 @@ global using System.Linq;
 global using Dapper;
 global using MySql.Data.MySqlClient;
 global using System.Data.SqlClient;
+global using Serilog;

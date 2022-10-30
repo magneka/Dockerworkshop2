@@ -2,6 +2,20 @@
  
 services:
 
+  seq:      
+    image: datalust/seq  
+    container_name: 'seq'    
+    volumes:
+      - seq_data:/data
+    restart: always
+    #restart: on-failure
+    environment:
+      - ACCEPT_EULA=Y      
+    ports:
+      - 8095:80
+      - 5341:5341
+    #command: apikey create -t newapikey --token 12345678901234567890 -s http://seq
+
   mysql80:
     image: mysql:8.0.30
     container_name: 'mysql80'
@@ -74,5 +88,6 @@ services:
     #command: ["sh", "/source/start.sh"]
      
 volumes:
+  seq_data:
   activemqdata:
   mysql-database:

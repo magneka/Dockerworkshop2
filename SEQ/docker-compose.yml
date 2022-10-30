@@ -1,0 +1,19 @@
+services:
+  seq:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: datalust/seq
+    # If you really want to use MySQL, uncomment the following line
+    #image: mysql:8.0.27
+    #command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - seq_data:/data
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y      
+    ports:
+      - 8095:80
+      - 5341:5341
+
+  
+volumes:  
+  seq_data:

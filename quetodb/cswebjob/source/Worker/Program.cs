@@ -1,13 +1,19 @@
-﻿
-using System.Text.Json;
+﻿using System.Text.Json;
+
+Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.Seq("http://seq:5341")
+            .CreateLogger();
 
 Console.WriteLine("Hello, Ulriken, starting webworker for ActiveMQ queue!");
+Log.Information("User: {Name}, starting webworker!", Environment.UserName);
 
 var receive = true;
 //var send = false;
 
 Uri connecturi = new Uri("activemq:tcp://activemq01:61616");
 Console.WriteLine("About to connect to " + connecturi);
+
 
 IConnectionFactory factory = new NMSConnectionFactory(connecturi);
 
@@ -73,7 +79,9 @@ using (ISession session = connection.CreateSession())
                 Console.WriteLine("Message received");
                 IMessage gmessage = consumer.Receive();
                 var mtype = gmessage.GetType();
+                var messageAsString = mtype.ToString();
                 Console.WriteLine(mtype.ToString());
+                Log.Information("Webworker received message: {messageAsString}, starting webworker!", messageAsString);
                                 
                 // if (gmessage.GetType() == typeof(Apache.NMS.ActiveMQ.Commands.ActiveMQTextMessage))
                 // {
@@ -119,6 +127,7 @@ using (ISession session = connection.CreateSession())
 
                         MessageDto? data = JsonSerializer.Deserialize<MessageDto>(jsonString);
                         Console.WriteLine("Received message with navn: " + data.Username);
+                        Log.Information("Webworker received message: {@data}", data);
 
                         using (IDbConnection db = new MySqlConnection("Server=mysql80;Database=mydb;Uid=user;Pwd=user"))
                         {
@@ -129,6 +138,8 @@ using (ISession session = connection.CreateSession())
                                 data.Useremail,
                                 data.Messagetext 
                             });
+                            Log.Information("Webworker inserted: {@data} into database", data);
+                            Log.CloseAndFlush();
                         }
                                                 
                         //var binaryFormatter = new BinaryFormatter();
@@ -146,3 +157,5 @@ using (ISession session = connection.CreateSession())
             }
     }
 }
+
+Log.CloseAndFlush();
