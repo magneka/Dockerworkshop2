@@ -1,0 +1,33 @@
+1. Vise databaser
+2. volumer 
+   internt docker (vegas)
+   Mappe opp volum fra lokal disk
+   Mappe opp docker volum
+
+   Fordeler med disse
+
+3. Initialisering av databaser
+   Noen startes med script
+   Noen må kjøre script etter at de er startet
+
+4. Prosjekt
+   Starte database
+   Sjekke at den er initialisert
+
+   Starte SEQ server
+
+   Starte Activemq
+   Gå til konsollet
+
+   Starte første node app som poster på
+
+   starte C# webjob 
+   sjekk at data kommer inn i databasen
+
+   Starte Rest api i Python
+   Sjekke at det henter data
+
+   Starte React applikasjon
+   Sjekke at data dukker opp i listen
+
+  

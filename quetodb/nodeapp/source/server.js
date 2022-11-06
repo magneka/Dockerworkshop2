@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 
-// Logger
+// Setting up SEQ Logger with Winston API
 const winston = require('winston');
 const { SeqTransport } = require('@datalust/winston-seq');
 
@@ -27,23 +27,22 @@ const logger = winston.createLogger({
   ]
 });
 
-// Webserver
+// Setting up an EXPRESS Webserver with folder for static files
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('wwwroot'))
 
-//ActiveMQ
+//Setting up a STOMP client for ActiveMQ messages
 const stomp = require("stomp-client")
-const stompClient = new stomp("activemq01", 61613) // <== merk ikke localhost, men containers indre nett
 
+// Setting up an endpoint for POST messages
 app.post('/api/contact', (req, res) => {
-    
-    console.log(req.body)
-    
+        
     var username = req.body.Name;
     var useremail = req.body.Email;
     var messagetext = req.body.Message;  
 
+    const stompClient = new stomp("activemq01", 61613) // <== merk ikke localhost, men containers indre nett
     stompClient.connect(() => {
         console.log("ActiveMQ is connected")
     
@@ -61,12 +60,11 @@ app.post('/api/contact', (req, res) => {
     
     })
  
-    //console.log(`Contacted by ${username}, ${useremail} regarding ${messagetext}`);
+    // send user to a fresh message page
     return res.redirect("/index.html");
 });
 
+// And finally activating the webserser on a port
 app.listen(85,() => {
-    console.log("Started on PORT 85");
-    logger.debug("Server started on port {port}", { port: "85" });
-  
+    logger.debug("Node Express.js server started on port {port}", { port: "85" });  
 })

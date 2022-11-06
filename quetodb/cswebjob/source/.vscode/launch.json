@@ -3,20 +3,7 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
-        
-
-        {
-            "name": "Debug Hello",
-            "type": "coreclr",
-            "request": "launch",   
-            "preLaunchTask": "buildhello",        
-            "program": "/source/hello/bin/Debug/net7.0/hello.dll",
-            "args": [],
-            "cwd": "/source/hello",
-            "stopAtEntry": false,
-            "console": "integratedTerminal"
-        },
+    "configurations": [    
         {
             "name": "Debug Worker",
             "type": "coreclr",

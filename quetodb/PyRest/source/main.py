@@ -3,18 +3,44 @@
 #https://stackoverflow.com/questions/27766794/switching-from-sqlite-to-mysql-with-flask-sqlalchemy
 
 from flask import Flask, request
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_restful import Api, Resource
+import seqlog
+import logging
+import json
+
+
+seqlog.log_to_seq(
+   server_url="http://seq:5341",   
+   level=logging.INFO,
+   batch_size=1,
+   auto_flush_timeout=1,  # seconds
+   override_root_logger=True,
+   json_encoder_class = json.encoder.JSONEncoder
+)
+
+#logging.basicConfig()
+#logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+#logging.debug("A log message in level debug")
+#logging.info("A log message in level info")
+#logging.warning("A log message in level warning")
+#logging.error("A log message in level error")
+#logging.critical("A log message in level critical")
+logging.info("Hello, {name}!", name="Ulriken")
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:user@mysql80/mydb' #'Server=mysql80;Database=mydb;Uid=user;Pwd=user'
+CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:user@mysql80/mydb' #'Server=mysql80;Database=mydb;Uid=user;Pwd=user'
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
+#app.logger.addHandler(handler)
+#logger = logging.getLogger(__name__)
 
-
-class Message(db.Model):
+class Ucmessages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     Username = db.Column(db.String(255))
     UserEmail = db.Column(db.String(255))
@@ -24,18 +50,19 @@ class Message(db.Model):
         return '<Post %s>' % self.MessageText
 
 
-class MessageSchema(ma.Schema):
+class UcmessagesSchema(ma.Schema):
     class Meta:
         fields = ("id", "Username", "UserEmail", "MessageText")
 
 
-message_schema = MessageSchema()
-messages_schema = MessageSchema(many=True)
+message_schema = UcmessagesSchema()
+messages_schema = UcmessagesSchema(many=True)
 
 
 class PostListResource(Resource):
-    def get(self):
-        messages = Message.query.all()
+    def get(self):        
+        messages = Ucmessages.query.all()
+        logging.info("/messages - Returning, {name}!", name=messages_schema.dump(messages))
         return messages_schema.dump(messages)
 
     def message(self):
@@ -78,5 +105,6 @@ api.add_resource(PostListResource, '/messages')
 api.add_resource(PostResource, '/messages_schema/<int:message_id>')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':    
+    #logger.info("Starting python rest api")
     app.run(debug=True)

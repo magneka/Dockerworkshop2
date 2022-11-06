@@ -2,6 +2,7 @@
  
 services:
 
+#===================================================
   seq:      
     image: datalust/seq  
     container_name: 'seq'    
@@ -16,6 +17,7 @@ services:
       - 5341:5341
     #command: apikey create -t newapikey --token 12345678901234567890 -s http://seq
 
+#===================================================
   mysql80:
     image: mysql:8.0.30
     container_name: 'mysql80'
@@ -32,6 +34,7 @@ services:
       - ./MySql/init:/docker-entrypoint-initdb.d
       - 'mysql-database:/var/lib/mysql'
 
+#===================================================
   activemq01:
     image: symptoma/activemq:latest
     container_name: 'activemq01'
@@ -46,33 +49,7 @@ services:
       - 'activemqdata:/data/activemq'
       - './activemq/log:/var/log/activemq'
 
-  webjob:    
-    #image: "mcr.microsoft.com/dotnet/sdk:6.0"
-    image: "mcr.microsoft.com/dotnet/sdk:7.0"
-    container_name: webjobcore70
-
-    tty: true
-    
-    # Configuration options that are applied at build time.    
-    ports:
-      - 3000:5059
-      - 3001:7212
-    
-    # Set environment variables
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - DOTNET_RUNNING_IN_CONTAINER=compose
-
-    depends_on:
-      - "mysql80"
-      - "activemq01"
-    
-    # Mount host directories to container directories
-    volumes:
-      - ./cswebjob/source:/source
-      - '/source/MinApi/obj'
-      - '/source/MinApi/bin'
-
+#===================================================
   nodeapp01:
     image: node:alpine3.15
     container_name: nodeapp01
@@ -84,7 +61,67 @@ services:
       - "activemq01"
     volumes:
       - ./nodeapp/source:/source
+      # Skal ikke mountes bruk "docker-compose up -V" etter endringer
       - '/source/node_modules'
+    #command: ["sh", "/source/start.sh"]
+
+
+#===================================================
+  webjob:    
+    #image: "mcr.microsoft.com/dotnet/sdk:6.0"
+    image: "mcr.microsoft.com/dotnet/sdk:7.0"
+    container_name: csworker
+
+    tty: true
+    
+    # Configuration options that are applied at build time.    
+    #ports:
+      #- 3000:5059
+      #- 3001:7212
+    
+    # Set environment variables
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_RUNNING_IN_CONTAINER=compose
+    depends_on:
+      - "mysql80"
+      - "activemq01"    
+    # Mount host directories to container directories
+    volumes:
+      - ./cswebjob/source:/source
+      # Disse skal ikke mountes bruk "docker-compose up -V" etter endringer
+      - /source/Worker/obj
+      - /source/Worker/bin
+    #command: ["sh", "/source/start.sh"]
+
+#===================================================
+  pyrestapi:   
+    container_name: pyrestapi    
+    build: 
+      context: ./PyRest
+      dockerfile: Dockerfile   
+    tty: true        # docker run -t
+    # Map external port to internal port
+    ports:
+      - 8099:80
+    volumes:
+      - ./PyRest/source:/source/
+
+#===================================================
+  reactspa:
+    # Specify the image to start the container from
+    image: node:alpine3.15
+    container_name: reactspa
+    tty: true
+    # Expose ports (HOST:CONTAINER)
+    ports:
+      - 3000:3000
+    # Set environment variables
+    #environment:
+    # Mount host directories to container directories
+    volumes:
+      - ./reactspa/source:/source
+      - /source/reactspa/node_modules
     #command: ["sh", "/source/start.sh"]
      
 volumes:
