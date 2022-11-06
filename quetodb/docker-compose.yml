@@ -35,6 +35,23 @@ services:
       - 'mysql-database:/var/lib/mysql'
 
 #===================================================
+  sqlpad:
+    image: sqlpad/sqlpad
+    container_name: 'sqlpad'
+    #restart: always
+    environment: 
+      SQLPAD_ADMIN: admin@uc.no
+      SQLPAD_ADMIN_PASSWORD: 83Wrw50    
+    ports:
+      - 3400:3000
+    volumes: 
+      - /sqlpad:/var/lib/sqlpad
+    #  - ./MySql/init:/docker-entrypoint-initdb.d
+    #  - 'mysql-database:/var/lib/mysql'
+
+      
+
+#===================================================
   activemq01:
     image: symptoma/activemq:latest
     container_name: 'activemq01'

@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  lubuntu:  
+    # Specify the image to start the container from    
+    build:  
+      context: .
+      dockerfile: Dockerfile   
+
+    container_name: lubuntu  
+
+    tty: true  
+    # Mount host directories to container directories
+    
+    volumes:
+      - ./source:/source
+  
