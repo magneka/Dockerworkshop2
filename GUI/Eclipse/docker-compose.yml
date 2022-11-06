@@ -1,0 +1,11 @@
+version: '3.9'
+ 
+services:
+  pseclipse:
+    image: psharkey/eclipse
+    container_name: 'ps_eclipse'
+    environment:
+      - DISPLAY=docker.for.mac.host.internal:0 
+    volumes:
+      - ./source:/root/workspace
+    
