@@ -1,4 +1,4 @@
-USE Prime;
+USE Master;
 GO
 
 CREATE TABLE MyTable(

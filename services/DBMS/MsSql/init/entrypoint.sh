@@ -1,5 +1,5 @@
 #!/bin/bash
-database=Prime
+database=Master
 wait_time=15s
 password=mssql1Ipw
 

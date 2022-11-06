@@ -7,18 +7,20 @@ services:
         restart: always
         environment: 
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: mydb
+            MYSQL_DATABASE: mysqldb
             MYSQL_USER: user
             MYSQL_PASSWORD: user
-
         ports:
           - 3306:3306
-    
         volumes: 
+            - mysql_testdb:/var/lib/mysql
             - ./init:/docker-entrypoint-initdb.d
-
+                        
     adminer:
         image: adminer
         restart: always
         ports: 
             - 8080:8080
+
+volumes:
+  mysql_testdb:

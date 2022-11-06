@@ -6,7 +6,13 @@ services:
     ports:
       - 1433:1433
     volumes:
-      - ./data:/var/lib/mssqlql/data
+      - mssqldata:/var/lib/mssqlql/data
+      - ./init:/usr/src/app
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=mssql1Ipw
+    working_dir: /usr/src/app 
+    command: sh -c ' chmod +x ./entrypoint.sh; ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
+
+volumes:
+  mssqldata:

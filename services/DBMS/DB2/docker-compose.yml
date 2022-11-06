@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db2:
+    image: ibmcom/db2
+    platform: linux/amd64
+    container_name: db2-test
+    privileged: true
+    environment:
+      # Unngå å trykke j for fortsett
+      LICENSE: "accept"
+      # DBNAVN FOR CONNECTON
+      DBNAME: "RC1DBA"
+      # USERNAME For pålogging
+      DB2INSTANCE: "db2dude"
+      # Passord for pålogging
+      DB2INST1_PASSWORD: "db2pw"
+      
+      BLU: "false"
+      ENABLE_ORACLE_COMPATIBILITY: "false"
+      UPDATEVAIL: "NO"
+      TO_CREATE_SAMPLEDB: "true"
+      REPODB: "false"
+      IS_OSXFS: "true"
+      PERSISTENT_HOME: "true"
+      HADR_ENABLED: "false"
+      ETCD_ENDPOINT: ""
+      ETCD_USERNAME: ""
+      ETCD_PASSWORD: ""
+    volumes: 
+
+       - db2Database:/database
+    ports:
+      - 50000:50000
+
+volumes:  
+  db2Database:
