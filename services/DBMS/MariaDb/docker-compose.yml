@@ -10,9 +10,11 @@ services:
       - ./init:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_DATABASE=test_db
+      # login med "root"
+      - MYSQL_ROOT_PASSWORD=J3zus!
+      
       - MYSQL_USER=Josef
       - MYSQL_PASSWORD=Chr1st!
-      - MYSQL_ROOT_PASSWORD=J3zus!
 
 volumes:
   mariadb_testdb:

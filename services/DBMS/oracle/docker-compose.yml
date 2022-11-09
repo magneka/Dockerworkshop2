@@ -12,7 +12,7 @@ services:
     ports:    
       - 1521:1521
     environment:      
-      # Create schema     
+      # logg på db xepdb1 med dbuser/dbuser
       APP_USER: dbuser
       APP_USER_PASSWORD: dbuser
       

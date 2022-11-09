@@ -4,6 +4,7 @@ services:
         image: postgres:10.5
         restart: always
         environment: 
+        # logg på dabase (ikke fyll ut), u/pw postgres/postgres merk endring av port
           - POSTGRES_USER=postgres
           - POSTGRES_PASSWORD=postgres
         logging:
