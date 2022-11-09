@@ -3,10 +3,18 @@ version: '3.9'
 services:
   codeblocks:
     container_name: 'codeblocks'
-    image: mzzyk/cpp
-    privileged: true
-    environment:
-      - DISPLAY=host.docker.internal:0 
+    image: wilfredsmith/alpine-codeblocks-vnc
+    #privileged: true
+    #environment:      
+    #  - DISPLAY=:0.0
+    tty: true  
     volumes:
       - ./source:/home/dev
+    # Set environment variables
+    environment:
+      - VNC_PW=1234    
+    # Expose ports (HOST:CONTAINER)
+    ports:
+      - 5901:5901
+      - 6901:6901
     

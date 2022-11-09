@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  centosvnc:  
+    # Specify the image to start the container from    
+    build:  
+      context: .
+      dockerfile: Dockerfile   
+
+    container_name: centosvnc  
+
+    tty: true  
+    # Mount host directories to container directories
+    
+    volumes:
+      - ./source:/source
+    
+    # Set environment variables
+    environment:
+      - VNC_PW=1234
+    
+    # Expose ports (HOST:CONTAINER)
+    ports:
+      - 5901:5901
+      - 6901:6901
+
+  # For å kjøre denne 
+  # gå til "http://localhost:6901"
+  # bruk passordet "1234"

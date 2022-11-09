@@ -35,19 +35,19 @@ services:
       - 'mysql-database:/var/lib/mysql'
 
 #===================================================
-  sqlpad:
-    image: sqlpad/sqlpad
-    container_name: 'sqlpad'
-    #restart: always
-    environment: 
-      SQLPAD_ADMIN: admin@uc.no
-      SQLPAD_ADMIN_PASSWORD: 83Wrw50    
-    ports:
-      - 3400:3000
-    volumes: 
-      - /sqlpad:/var/lib/sqlpad
-    #  - ./MySql/init:/docker-entrypoint-initdb.d
-    #  - 'mysql-database:/var/lib/mysql'
+#  sqlpad:
+#    image: sqlpad/sqlpad
+#    container_name: 'sqlpad'
+#    #restart: always
+#    environment: 
+#      SQLPAD_ADMIN: admin@uc.no
+#      SQLPAD_ADMIN_PASSWORD: 83Wrw50    
+#    ports:
+#      - 3400:3000
+#    volumes: 
+#      - /sqlpad:/var/lib/sqlpad
+#    #  - ./MySql/init:/docker-entrypoint-initdb.d
+#    #  - 'mysql-database:/var/lib/mysql'
 
       
 
@@ -80,7 +80,13 @@ services:
       - ./nodeapp/source:/source
       # Skal ikke mountes bruk "docker-compose up -V" etter endringer
       - '/source/node_modules'
+    working_dir: /source
+    # Hvorfor fungerer ikke disse, kunne vi gjort det på en annen måte??
+    # Hva om vi hadde brukt en Dockerfile? Kunne vi fått npm install til å bli et layer?
+    # Ville det bedret tiden for oppstart av containeren?
+    #command: sh -c "npm install" && "node /source/server.js"
     #command: ["sh", "/source/start.sh"]
+    #command: sh -c "chmod +X /source/start.sh" && "/source/start.sh"
 
 
 #===================================================
@@ -122,7 +128,7 @@ services:
     ports:
       - 8099:80
     volumes:
-      - ./PyRest/source:/source/
+      - ./PyRest/source:/source
 
 #===================================================
   reactspa:

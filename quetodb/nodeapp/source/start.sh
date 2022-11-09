@@ -2,4 +2,4 @@
 
 cd /source
 npm install
-node server.js
+npm start
