@@ -92,8 +92,11 @@ services:
 
 #===================================================
   webjob:    
-    #image: "mcr.microsoft.com/dotnet/sdk:6.0"
-    image: "mcr.microsoft.com/dotnet/sdk:7.0"
+    #image: "mcr.microsoft.com/dotnet/sdk:7.0"
+    build:
+      # Either a path to a directory containing a Dockerfile
+      context: ./cswebjob
+      dockerfile: Dockerfile  
     container_name: csworker
 
     tty: true
@@ -117,6 +120,8 @@ services:
       - /source/Worker/obj
       - /source/Worker/bin
     #command: ["sh", "/source/start.sh"]
+    working_dir: /source/Worker
+    command: dotnet watch run 
 
 #===================================================
   pyrestapi:   
