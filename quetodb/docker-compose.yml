@@ -71,6 +71,7 @@ services:
     image: node:alpine3.15
     container_name: nodeapp01
     tty: true
+    stdin_open: true
     ports:
       - 3085:85
     depends_on:
