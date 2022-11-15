@@ -1,5 +1,3 @@
-#version: '3.9'
- 
 services:
 
 #===================================================
@@ -32,7 +30,14 @@ services:
       - 3306:3306
     volumes: 
       - ./MySql/init:/docker-entrypoint-initdb.d
-      - 'mysql-database:/var/lib/mysql'
+      - mysql-database:/var/lib/mysql
+    healthcheck:
+      test: "mysql -uroot -p$MYSQL_ROOT_PASSWORD mydb -e 'select 1'"
+      #test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      #test: "mysql $$MYSQL_DATABASE -u$$MYSQL_USER -p$$MYSQL_PASSWORD -e 'SELECT 1;'"
+      timeout: 20s
+      retries: 20
+      
 
 #===================================================
 #  sqlpad:
@@ -68,13 +73,17 @@ services:
 
 #===================================================
   nodeapp01:
-    image: node:alpine3.15
     container_name: nodeapp01
+    #image: node:alpine3.15
+    build: 
+      context: ./nodeapp
+      dockerfile: Dockerfile   
     tty: true
     stdin_open: true
     ports:
       - 3085:85
     depends_on:
+      - "seq"
       - "mysql80"
       - "activemq01"
     volumes:
@@ -82,12 +91,7 @@ services:
       # Skal ikke mountes bruk "docker-compose up -V" etter endringer
       - '/source/node_modules'
     working_dir: /source
-    # Hvorfor fungerer ikke disse, kunne vi gjort det på en annen måte??
-    # Hva om vi hadde brukt en Dockerfile? Kunne vi fått npm install til å bli et layer?
-    # Ville det bedret tiden for oppstart av containeren?
-    #command: sh -c "npm install" && "node /source/server.js"
-    #command: ["sh", "/source/start.sh"]
-    #command: sh -c "chmod +X /source/start.sh" && "/source/start.sh"
+    command: node --inspect=2000 /source/server.js
 
 
 #===================================================
@@ -100,6 +104,7 @@ services:
     container_name: csworker
 
     tty: true
+    stdin_open: true
     
     # Configuration options that are applied at build time.    
     #ports:
@@ -111,6 +116,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=compose
     depends_on:
+      - "seq"
       - "mysql80"
       - "activemq01"    
     # Mount host directories to container directories
@@ -130,11 +136,21 @@ services:
       context: ./PyRest
       dockerfile: Dockerfile   
     tty: true        # docker run -t
+    stdin_open: true  
+    depends_on:
+      - "mysql80"
+      - "seq"
     # Map external port to internal port
     ports:
-      - 8099:80
+      #- 8099:80
+      - "5000:5000"
+      - "5678:5678"
     volumes:
       - ./PyRest/source:/source
+    #restart: on-failure
+    working_dir: /source
+    #command: python /source/main.py
+    command: python -m debugpy --listen 5678 /source/main.py
 
 #===================================================
   reactspa:

@@ -1,5 +1,7 @@
 {
     "recommendations": [
+        "ms-python.isort",
+        "rangav.vscode-thunder-client",
         "ms-python.python"
     ]
 }

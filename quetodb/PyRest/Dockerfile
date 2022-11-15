@@ -1,10 +1,9 @@
 FROM python:3.9
 
-RUN pip install --upgrade --force-reinstall flask && \
-    pip install pytest 
+RUN pip3 install --upgrade --force-reinstall flask && \
+     pip3 install pytest 
 
-# Spørsmål: hvorfor fungerer ikke dette?
-# Hva måtte vi gjøre for å få det til å virke
-#WORKDIR /source
-#RUN pip3 install -r /source/requirements.txt
+WORKDIR /source
+COPY ./source/requirements.txt .
+RUN pip3 install -r requirements.txt
 
